@@ -1,0 +1,33 @@
+{
+  "name": "structprint",
+  "version": "0.1.0-dev",
+  "description": "The missing architecture of WEB APP in frontend domain, **connect** all the other frameworks",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valaxy/structprint.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/valaxy/structprint/issues"
+  },
+  "homepage": "https://github.com/valaxy/structprint#readme",
+  "devDependencies": {
+    "cjs": "github:valaxy/cjs",
+    "fs-extra": "^0.26.4",
+    "qunitjs": "^1.20.0",
+    "requirejs": "^2.1.22",
+    "body-parser": "^1.14.2",
+    "express": "^4.13.3"
+  },
+  "dependencies": {
+
+  }
+}
