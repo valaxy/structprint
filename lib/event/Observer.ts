@@ -13,7 +13,7 @@ class Observer {
         var counter                 = 0
         var theAppearEvent:Event    = eventsLists[0][0]
         var theAppearEvents:Event[] = []
-        var eventIndexes:number[]   = new Array(listCount).fill(0)
+        var eventIndexes:number[]   = new Array(listCount)['fill'](0) // fuck the tpyescript
         var end                     = false
 
         while (true) {

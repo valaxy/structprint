@@ -1,10 +1,10 @@
 class Event {
     private static ID_GENERATOR:number = 0
 
-    private __id:number = Event.ID_GENERATOR++
-    private __callback:Function
-    private __composition:string[]
-    private __observer
+    __id:number = Event.ID_GENERATOR++
+    __callback:Function
+    __composition:string[]
+    __observer
 
     get _id() { return this.__id}
 
