@@ -28,6 +28,6 @@
     "express": "^4.13.3"
   },
   "dependencies": {
-
+    "underscore": "^1.8.3"
   }
 }
