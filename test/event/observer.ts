@@ -95,7 +95,6 @@ QUnit.test('_on()', function (assert) {
     })
 
     var event2 = obs._on({type: 'a', data: 123}, fn)
-    console.log(obs._memberToEvent)
     assert.deepEqual(obs._memberToEvent, {
         'type$"a"': [event, event2],
         'data$123': [event2]
@@ -151,7 +150,7 @@ QUnit.test('trigger(): struct event', function (assert) {
     })
     assert.deepEqual(obs._memberToEvent, {
         'type$"t1"': [event],
-        'data$123': [event]
+        'data$123' : [event]
     })
 
     obs.trigger({type: 't1'})

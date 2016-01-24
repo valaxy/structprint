@@ -28,6 +28,8 @@
     "express": "^4.13.3"
   },
   "dependencies": {
+    "async": "^1.5.2",
+    "cjs": "github:valaxy/cjs",
     "underscore": "^1.8.3"
   }
 }

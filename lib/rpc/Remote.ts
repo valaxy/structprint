@@ -2,4 +2,4 @@ class Remote {
 
 }
 
-export = Remote
+export default Remote

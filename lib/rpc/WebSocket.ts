@@ -1,4 +1,4 @@
-import Remote = require('./Remote')
+import Remote from './Remote'
 
 class WebSocket extends Remote {
     constructor() {
@@ -7,5 +7,5 @@ class WebSocket extends Remote {
     }
 }
 
-export = WebSocket
+export default WebSocket
 

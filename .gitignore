@@ -1,10 +1,5 @@
 node_modules/
-typings/
 
-lib/**/*.js
-lib/**/*.map
-
-test/**/*.js
-test/**/*.map
+build/typings/
 
 dest/

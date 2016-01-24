@@ -3,7 +3,10 @@ var fs = require('fs-extra')
 module.exports = {
 	matchOnFileRelativePath: [
 		'test',
-		'test/**/*'
+		'test/**/*',
+
+		'node_modules',
+		'node_modules/**/*'
 	],
 
 	tasks: [{
@@ -15,7 +18,9 @@ module.exports = {
 			fs.copySync(info.filePath, outputPath)
 		},
 		matchOnFileRelativePath: [
-			'**/*.html'
+			'**/*.html',
+			'**/*.js',
+			'**/*.json'
 		]
 	}]
 }

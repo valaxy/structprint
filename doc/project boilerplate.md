@@ -1,0 +1,11 @@
+# Boilerplate
+- **app-life-cycle**       应用生命周期有关的逻辑
+    - **boot**  APP引导逻辑
+    - **home**  APP初始化逻辑
+    - **route** APP状态转换的逻辑
+- presentation   
+- service
+    - case
+- domain        
+- dataAccess
+    - rpc

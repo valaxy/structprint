@@ -1,4 +1,4 @@
-import Remote = require('./Remote')
+import Remote from './Remote'
 
 
 class JSONP extends Remote {
@@ -8,4 +8,4 @@ class JSONP extends Remote {
     }
 }
 
-export = JSONP
+export default JSONP
