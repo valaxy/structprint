@@ -1,4 +1,4 @@
-import Event = require('./Event')
+import Event from './Event'
 import _ = require('underscore')
 
 class Observer {
@@ -14,7 +14,7 @@ class Observer {
         var theAppearEvent:Event    = eventsLists[0][0]
         var theAppearEvents:Event[] = []
         var eventIndexes:number[]   = new Array(listCount)['fill'](0) // fuck the tpyescript
-        var end                     = false
+        var end = false
 
         while (true) {
             var list:Event[] = eventsLists[listIndex]
@@ -122,4 +122,4 @@ class Observer {
 
 
 
-export = Observer
+export default Observer

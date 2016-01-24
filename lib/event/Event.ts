@@ -23,7 +23,7 @@ class Event {
     }
 }
 
-export = Event
+export default Event
 
 //__subscriberID:number
 //        this.__subscriberID = subscriberID

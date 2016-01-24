@@ -1,5 +1,5 @@
-import Observer = require('./Observer')
-import Event = require('./Event')
+import Observer from './Observer'
+import Event from './Event'
 
 // @日志:
 // - 没有监听所有事件的API
@@ -39,7 +39,7 @@ class Subscriber {
     }
 }
 
-export = Subscriber
+export default Subscriber
 
 
 //private static _SID_GENERATOR = 0
