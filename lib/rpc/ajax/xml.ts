@@ -1,3 +1,3 @@
-export default function (xhr:XMLHttpRequest) {
+export default function xml(xhr:XMLHttpRequest) {
     throw new Error('not implement')
 }

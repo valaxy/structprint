@@ -1,4 +1,4 @@
-export default function (xhr:XMLHttpRequest, data:Object) {
+export default  function formUrlEncoded(xhr:XMLHttpRequest, data:Object) {
     var requestData = ''
     for (var key in data) {
         var value = data[key]

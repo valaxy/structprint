@@ -1,13 +1,16 @@
-import Event = require('../../lib/event/Event')
-import Observer = require('../../lib/event/Observer')
-import Subscriber = require('../../lib/event/Subscriber')
+import Event from '../../lib/event/Event'
+import Observer from '../../lib/event/Observer'
+import Subscriber from '../../lib/event/Subscriber'
 
 QUnit.module('Event')
 
+var createEvent = function () {
+    return new Event(null, null, null)
+}
 
 QUnit.test('_id', function (assert) {
-    var e1 = new Event
-    var e2 = new Event
+    var e1 = createEvent()
+    var e2 = createEvent()
     assert.equal(e2._id, e1._id + 1)
 })
 

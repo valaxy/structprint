@@ -5,9 +5,6 @@
   "path": "typings",
   "bundle": "typings/tsd.d.ts",
   "installed": {
-    "es6-promise/es6-promise.d.ts": {
-      "commit": "7577a2f4c134790891c52affdacdae99d802571b"
-    },
     "express/express.d.ts": {
       "commit": "7577a2f4c134790891c52affdacdae99d802571b"
     },

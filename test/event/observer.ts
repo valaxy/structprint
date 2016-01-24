@@ -1,7 +1,11 @@
-import Observer = require('../../lib/event/Observer')
-import Event = require('../../lib/event/Event')
+import Observer from '../../lib/event/Observer'
+import Event  from '../../lib/event/Event'
 
 QUnit.module('Observer')
+
+var createEvent = function () {
+    return new Event(null, null, null)
+}
 
 
 QUnit.test('_pickAlwaysAppearEvents(): empty', function (assert) {
@@ -9,7 +13,7 @@ QUnit.test('_pickAlwaysAppearEvents(): empty', function (assert) {
     assert.deepEqual(obs._pickAlwaysAppearEvents([]), [])
     assert.deepEqual(obs._pickAlwaysAppearEvents([[]]), [])
     assert.deepEqual(obs._pickAlwaysAppearEvents([
-        [new Event],
+        [createEvent()],
         []
     ]), [])
 })
@@ -17,9 +21,9 @@ QUnit.test('_pickAlwaysAppearEvents(): empty', function (assert) {
 
 QUnit.test('_pickAlwaysAppearEvents(): exactly same', function (assert) {
     var obs = new Observer
-    var e1  = new Event
-    var e2  = new Event
-    var e3  = new Event
+    var e1  = createEvent()
+    var e2  = createEvent()
+    var e3  = createEvent()
     assert.deepEqual(obs._pickAlwaysAppearEvents([
         [e1]
     ]), [e1])
@@ -37,9 +41,9 @@ QUnit.test('_pickAlwaysAppearEvents(): exactly same', function (assert) {
 
 QUnit.test('_pickAlwaysAppearEvents(): mix', function (assert) {
     var obs = new Observer
-    var e1  = new Event
-    var e2  = new Event
-    var e3  = new Event
+    var e1  = createEvent()
+    var e2  = createEvent()
+    var e3  = createEvent()
     assert.deepEqual(obs._pickAlwaysAppearEvents([
         [e1, e2],
         [e2, e3],
@@ -50,9 +54,9 @@ QUnit.test('_pickAlwaysAppearEvents(): mix', function (assert) {
 
 QUnit.test('_pickAlwaysAppearEvents(): none', function (assert) {
     var obs = new Observer
-    var e1  = new Event
-    var e2  = new Event
-    var e3  = new Event
+    var e1  = createEvent()
+    var e2  = createEvent()
+    var e3  = createEvent()
     assert.deepEqual(obs._pickAlwaysAppearEvents([
         [e1, e2],
         [e2, e3],
@@ -83,9 +87,9 @@ QUnit.test('_getObjectComposition()', function (assert) {
 
 
 QUnit.test('_on()', function (assert) {
-    var obs   = new Observer
-    var fn    = () => {}
-    var event = obs._on({type: 'a'}, fn)
+    var obs:any = new Observer
+    var fn      = () => {}
+    var event   = obs._on({type: 'a'}, fn)
 
     assert.ok(event._id >= 0)
     assert.equal(event._callback, fn)
@@ -104,7 +108,7 @@ QUnit.test('_on()', function (assert) {
 
 
 QUnit.test('_off()', function (assert) {
-    var obs            = new Observer
+    var obs:any        = new Observer
     var event          = new Event(null, [
         'aaa',
         'bbb'
@@ -124,9 +128,9 @@ QUnit.test('_off()', function (assert) {
 
 
 QUnit.test('_offList()', function (assert) {
-    var obs            = new Observer
-    var event          = new Event(null, ['aaa'])
-    var event2         = new Event(null, ['bbb'])
+    var obs:any        = new Observer
+    var event          = new Event(null, ['aaa'], null)
+    var event2         = new Event(null, ['bbb'], null)
     obs._memberToEvent = {
         aaa: [event, 1],
         bbb: [2, event],
@@ -144,8 +148,8 @@ QUnit.test('_offList()', function (assert) {
 // todo, add string event
 
 QUnit.test('trigger(): struct event', function (assert) {
-    var obs   = new Observer
-    var event = obs._on({type: 't1', data: 123}, () => {
+    var obs:any = new Observer
+    var event   = obs._on({type: 't1', data: 123}, () => {
         assert.ok(true)
     })
     assert.deepEqual(obs._memberToEvent, {

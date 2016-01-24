@@ -1,4 +1,8 @@
 import Remote from './Remote'
+import formUrlEncoded from './ajax/formUrlEncoded'
+import formData from './ajax/formData'
+import json from './ajax/json'
+import xml from './ajax/xml'
 
 const EVENTS = [
     'onloadstart',
@@ -11,10 +15,10 @@ const EVENTS = [
 ]
 
 const CONTENT_TYPE_PROCESS = {
-    'application/x-www-form-urlencoded': require('./ajax/formUrlEncoded').default,
-    'multipart/form-data'              : require('./ajax/formData').default,
-    'application/json'                 : require('./ajax/json').default,
-    'text/xml'                         : require('./ajax/xml').default
+    'application/x-www-form-urlencoded': formUrlEncoded,
+    'multipart/form-data'              : formData,
+    'application/json'                 : json,
+    'text/xml'                         : xml
 }
 
 class AJAX extends Remote {

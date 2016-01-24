@@ -19,6 +19,7 @@ module.exports = {
 		},
 		matchOnFileRelativePath: [
 			'**/*.html',
+			'**/*.css',
 			'**/*.js',
 			'**/*.json'
 		]
