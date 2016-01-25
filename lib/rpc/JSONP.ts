@@ -1,5 +1,6 @@
-import Remote from './Remote'
+"use strict"
 
+import Remote from './Remote'
 
 class JSONP extends Remote {
     constructor() {

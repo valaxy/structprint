@@ -1,3 +1,5 @@
+"use strict"
+
 import Remote from './Remote'
 import formUrlEncoded from './ajax/formUrlEncoded'
 import formData from './ajax/formData'

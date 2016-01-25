@@ -1,3 +1,5 @@
+"use strict"
+
 class UseCase {
     static ID_COUNTER:number = 0
     private _id

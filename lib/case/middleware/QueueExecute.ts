@@ -1,3 +1,5 @@
+"use strict"
+
 import Middleware from "./Middleware";
 import UseCase from "../UseCase";
 import async = require('async')

@@ -1,3 +1,5 @@
+"use strict"
+
 import UseCase from './UseCase'
 import Middleware from './middleware/Middleware'
 

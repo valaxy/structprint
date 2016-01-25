@@ -1,3 +1,5 @@
+"use strict"
+
 import Remote from './Remote'
 
 class WebSocket extends Remote {

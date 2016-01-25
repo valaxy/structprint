@@ -1,3 +1,5 @@
+"use strict"
+
 class Event {
     private static ID_GENERATOR:number = 0
 

@@ -1,3 +1,5 @@
+"use strict"
+
 import Observer from './Observer'
 import Event from './Event'
 
