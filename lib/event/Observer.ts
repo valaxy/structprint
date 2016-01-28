@@ -6,6 +6,12 @@ import _ = require('underscore')
 class Observer {
     PATH_SPLITER:string                                  = String.fromCharCode(36)
     private _memberToEvent:{[index:string]:Array<Event>} = {}
+    private _tryCatch:any
+
+    constructor(options?) {
+        options        = options || {}
+        this._tryCatch = options.tryCatch || (function (e) {console.error(e.stack)})
+    }
 
     _pickAlwaysAppearEvents(eventsLists:Event[][]):Event[] {
         if (eventsLists.length == 0) return []
@@ -117,7 +123,11 @@ class Observer {
 
         var triggerEvents:Event[] = this._pickAlwaysAppearEvents(eventsList)
         triggerEvents.forEach(event => {
-            event._callback.apply(this, args)
+            try {
+                event._callback.apply(this, args)
+            } catch (e) {
+                this._tryCatch(e)
+            }
         })
     }
 }

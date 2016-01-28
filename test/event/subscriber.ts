@@ -34,7 +34,24 @@ QUnit.test('listenTo()/stopListening(): struct event', function (assert) {
     assert.expect(4)
 })
 
+QUnit.test('listenTo(): execute fail', function (assert) {
+    var s    = new Subscriber
+    var o    = new Observer({
+        tryCatch: function () {}
+    })
+    var done = assert.async()
 
+    s.listenTo(o, 'abc', () => {
+        throw new Error('xx')
+    })
+
+    s.listenTo(o, 'abc', () => {
+        assert.ok(true)
+        done()
+    })
+
+    o.trigger('abc')
+})
 
 QUnit.test('listenToOnce()', function (assert) {
     var s = new Subscriber

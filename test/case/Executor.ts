@@ -69,3 +69,24 @@ QUnit.test('multiply middlewares', function (assert) {
         done()
     })
 })
+
+
+//QUnit.test('multiply middlewars fail', function (assert) {
+//    var done        = assert.async()
+//    var middleware1 = async function (execute) {
+//        await execute()
+//    }
+//
+//    var middleware2 = async function (execute) {
+//        await execute()
+//    }
+//    var executor    = new Executor([
+//        middleware1,
+//        middleware2
+//    ])
+//    executor.execute(MyUseCase).then(function () {
+//        assert.expect(7)
+//        done()
+//    })
+//
+//})
