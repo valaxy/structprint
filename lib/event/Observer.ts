@@ -16,12 +16,12 @@ class Observer {
     _pickAlwaysAppearEvents(eventsLists:Event[][]):Event[] {
         if (eventsLists.length == 0) return []
 
-        var listCount               = eventsLists.length
-        var listIndex               = 0
-        var counter                 = 0
-        var theAppearEvent:Event    = eventsLists[0][0]
-        var theAppearEvents:Event[] = []
-        var eventIndexes:number[]   = new Array(listCount)['fill'](0) // fuck the tpyescript
+        var listCount                  = eventsLists.length
+        var listIndex                  = 0
+        var sameEventCountInContinuous = 0
+        var theAppearEvent:Event       = eventsLists[0][0]
+        var theAppearEvents:Event[]    = []
+        var eventIndexes:number[]      = new Array(listCount)['fill'](0) // fuck the tpyescript
         var end = false
 
         while (true) {
@@ -36,15 +36,15 @@ class Observer {
                 }
 
                 if (theAppearEvent._id == currentEvent._id) {
-                    counter += 1
+                    sameEventCountInContinuous += 1
                     eventIndexes[listIndex] += 1
-                    if (listCount == counter) theAppearEvents.push(currentEvent)
+                    if (listCount == sameEventCountInContinuous) theAppearEvents.push(currentEvent)
                     break
                 } else if (theAppearEvent._id < currentEvent._id) {
-                    counter        = 1
+                    sameEventCountInContinuous = 1
                     eventIndexes[listIndex] += 1
-                    theAppearEvent = currentEvent
-                    if (listCount == counter) theAppearEvents.push(currentEvent)
+                    theAppearEvent             = currentEvent
+                    if (listCount == sameEventCountInContinuous) theAppearEvents.push(currentEvent)
                     break
                 } else {
                     eventIndexes[listIndex] += 1
@@ -58,10 +58,31 @@ class Observer {
         return theAppearEvents
     }
 
-    _getObjectComposition(obj:Object) {
-        var iterate = (compositions:string[], prefix:string, obj:Object) => {
-            for (var key in obj) {
-                var value     = obj[key]
+    _pickSubSet(eventsLists:Event[][]):Event[] {
+        var appearEvents:Event[] = []
+
+        eventsLists.forEach(eventList => {
+            eventList.forEach(event => {
+                event.__matchCount += 1
+            })
+        })
+
+        eventsLists.forEach(eventsLists => {
+            eventsLists.forEach(event => {
+                if (event.__matchCount == event._compositionCount) {
+                    appearEvents.push(event)
+                }
+                event.__matchCount = 0
+            })
+        })
+
+        return appearEvents
+    }
+
+    _flattenEventSource(eventSource:Object) {
+        var iterate = (compositions:string[], prefix:string, eventSource:Object) => {
+            for (var key in eventSource) {
+                var value     = eventSource[key]
                 var newPrefix = `${prefix}${this.PATH_SPLITER}${key}`
                 if (typeof value == 'object') {
                     iterate(compositions, newPrefix, value)
@@ -78,12 +99,12 @@ class Observer {
             return compositions
         }
 
-        return iterate([], '', obj)
+        return iterate([], '', eventSource)
     }
 
     // internal use
     _on(event:Object, callback:Function):Event {
-        var composition:string[] = this._getObjectComposition(event)
+        var composition:string[] = this._flattenEventSource(event)
         var e                    = new Event(callback, composition, this)
         composition.forEach(member => {
             if (member in this._memberToEvent) {
@@ -116,12 +137,13 @@ class Observer {
             event = {type: event}
         }
 
-        var composition:string[] = this._getObjectComposition(event)
+        var composition:string[] = this._flattenEventSource(event)
         var eventsList           = composition.map(member => {
             return this._memberToEvent[member] || []
         })
 
-        var triggerEvents:Event[] = this._pickAlwaysAppearEvents(eventsList)
+        //var triggerEvents:Event[] = this._pickAlwaysAppearEvents(eventsList)
+        var triggerEvents:Event[] = this._pickSubSet(eventsList)
         triggerEvents.forEach(event => {
             try {
                 event._callback.apply(this, args)

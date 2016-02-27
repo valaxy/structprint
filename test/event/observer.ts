@@ -7,6 +7,23 @@ var createEvent = function () {
     return new Event(null, null, null)
 }
 
+QUnit.test('_pickSubset()', assert => {
+    var obs = new Observer
+    var e0  = new Event(null, ['0', '1'], null)
+    var e1  = new Event(null, ['1', '2'], null)
+    var e2  = new Event(null, ['0', '1', '3'], null)
+    assert.deepEqual(obs._pickSubSet([]), [])
+    assert.deepEqual(obs._pickSubSet([
+        [e0, e2],
+        [e0, e1, e2],
+        [e1]
+    ]), [e0, e1])
+
+    assert.equal(e0.__matchCount, 0)
+    assert.equal(e1.__matchCount, 0)
+    assert.equal(e2.__matchCount, 0)
+})
+
 
 QUnit.test('_pickAlwaysAppearEvents(): empty', function (assert) {
     var obs = new Observer
@@ -68,7 +85,7 @@ QUnit.test('_pickAlwaysAppearEvents(): none', function (assert) {
 QUnit.test('_getObjectComposition()', function (assert) {
     var obs          = new Observer
     obs.PATH_SPLITER = '$'
-    assert.deepEqual(obs._getObjectComposition({
+    assert.deepEqual(obs._flattenEventSource({
             a: '123',
             b: 123,
             c: true,
@@ -144,8 +161,15 @@ QUnit.test('_offList()', function (assert) {
     })
 })
 
+QUnit.test('trigger(): string event', assert => {
+    var obs = new Observer
+    obs._on({type: 'tt'}, () => {
+        assert.ok(true)
+    })
 
-// todo, add string event
+    obs.trigger({type: 'tt'})
+    assert.expect(1)
+})
 
 QUnit.test('trigger(): struct event', function (assert) {
     var obs:any = new Observer
@@ -161,5 +185,5 @@ QUnit.test('trigger(): struct event', function (assert) {
     obs.trigger({type: 't1', data: 123})
     obs.trigger({data: 123})
     obs.trigger({type: 't2'})
-    assert.expect(4)
+    assert.expect(2)
 })
