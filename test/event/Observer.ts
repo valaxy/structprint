@@ -1,189 +1,92 @@
+import Event from '../../lib/event/Event'
+import Subject from '../../lib/event/Subject'
 import Observer from '../../lib/event/Observer'
-import Event  from '../../lib/event/Event'
+
 
 QUnit.module('Observer')
 
-var createEvent = function () {
-    return new Event(null, null, null)
-}
 
-QUnit.test('_pickSubset()', assert => {
-    var obs = new Observer
-    var e0  = new Event(null, ['0', '1'], null)
-    var e1  = new Event(null, ['1', '2'], null)
-    var e2  = new Event(null, ['0', '1', '3'], null)
-    assert.deepEqual(obs._pickSubSet([]), [])
-    assert.deepEqual(obs._pickSubSet([
-        [e0, e2],
-        [e0, e1, e2],
-        [e1]
-    ]), [e0, e1])
-
-    assert.equal(e0.__matchCount, 0)
-    assert.equal(e1.__matchCount, 0)
-    assert.equal(e2.__matchCount, 0)
-})
-
-
-QUnit.test('_pickAlwaysAppearEvents(): empty', function (assert) {
-    var obs = new Observer
-    assert.deepEqual(obs._pickAlwaysAppearEvents([]), [])
-    assert.deepEqual(obs._pickAlwaysAppearEvents([[]]), [])
-    assert.deepEqual(obs._pickAlwaysAppearEvents([
-        [createEvent()],
-        []
-    ]), [])
-})
-
-
-QUnit.test('_pickAlwaysAppearEvents(): exactly same', function (assert) {
-    var obs = new Observer
-    var e1  = createEvent()
-    var e2  = createEvent()
-    var e3  = createEvent()
-    assert.deepEqual(obs._pickAlwaysAppearEvents([
-        [e1]
-    ]), [e1])
-    assert.deepEqual(obs._pickAlwaysAppearEvents([
-        [e1],
-        [e1],
-        [e1]
-    ]), [e1])
-    assert.deepEqual(obs._pickAlwaysAppearEvents([
-        [e1, e2, e3],
-        [e1, e2, e3]
-    ]), [e1, e2, e3])
-})
-
-
-QUnit.test('_pickAlwaysAppearEvents(): mix', function (assert) {
-    var obs = new Observer
-    var e1  = createEvent()
-    var e2  = createEvent()
-    var e3  = createEvent()
-    assert.deepEqual(obs._pickAlwaysAppearEvents([
-        [e1, e2],
-        [e2, e3],
-        [e1, e2, e3]
-    ]), [e2])
-})
-
-
-QUnit.test('_pickAlwaysAppearEvents(): none', function (assert) {
-    var obs = new Observer
-    var e1  = createEvent()
-    var e2  = createEvent()
-    var e3  = createEvent()
-    assert.deepEqual(obs._pickAlwaysAppearEvents([
-        [e1, e2],
-        [e2, e3],
-        [e1, e3]
-    ]), [])
-})
-
-
-QUnit.test('_getObjectComposition()', function (assert) {
-    var obs          = new Observer
-    obs.PATH_SPLITER = '$'
-    assert.deepEqual(obs._flattenEventSource({
-            a: '123',
-            b: 123,
-            c: true,
-            d: {
-                a: '1'
-            }
-        }),
-        [
-            'a$"123"',
-            'b$123',
-            'c$true',
-            'd$a$"1"'
-        ]
-    )
-})
-
-
-QUnit.test('_on()', function (assert) {
+QUnit.test('listenTo()/stopListening(): struct event', function (assert) {
     var obs:any = new Observer
-    var fn      = () => {}
-    var event   = obs._on({type: 'a'}, fn)
-
-    assert.ok(event._id >= 0)
-    assert.equal(event._callback, fn)
-    assert.deepEqual(event._composition, ['type$"a"'])
-    assert.deepEqual(obs._memberToEvent, {
-        'type$"a"': [event]
-    })
-
-    var event2 = obs._on({type: 'a', data: 123}, fn)
-    assert.deepEqual(obs._memberToEvent, {
-        'type$"a"': [event, event2],
-        'data$123': [event2]
-    })
-})
-
-
-
-QUnit.test('_off()', function (assert) {
-    var obs:any        = new Observer
-    var event          = new Event(null, [
-        'aaa',
-        'bbb'
-    ], obs)
-    obs._memberToEvent = {
-        aaa: [event, 1],
-        bbb: [2, event],
-        ccc: [3]
-    }
-    obs._off(event)
-    assert.deepEqual(obs._memberToEvent, {
-        aaa: [1],
-        bbb: [2],
-        ccc: [3]
-    })
-})
-
-
-QUnit.test('_offList()', function (assert) {
-    var obs:any        = new Observer
-    var event          = new Event(null, ['aaa'], null)
-    var event2         = new Event(null, ['bbb'], null)
-    obs._memberToEvent = {
-        aaa: [event, 1],
-        bbb: [2, event],
-        ccc: [3]
-    }
-    obs._offList([event, event2])
-    assert.deepEqual(obs._memberToEvent, {
-        aaa: [1],
-        bbb: [2],
-        ccc: [3]
-    })
-})
-
-QUnit.test('trigger(): string event', assert => {
-    var obs = new Observer
-    obs._on({type: 'tt'}, () => {
+    var sub     = new Subject
+    obs.listenTo(sub, {type: 'open'}, () => {
         assert.ok(true)
     })
 
-    obs.trigger({type: 'tt'})
+    sub.trigger({type: 'open'})
+    sub.trigger({type: 'open', casefileID: 123})
+    assert.expect(2)
+
+
+    obs.stopListening().listenTo(sub, {type: 'open', casefileID: 123})
+    sub.trigger({type: 'open', casefileID: 123})
+    assert.expect(3)
+
+    sub.trigger({casefileID: 123})
+    sub.trigger({type: 'open'})
+    assert.expect(3)
+
+    obs.stopListening()
+    assert.deepEqual(obs._events, [])
+    assert.expect(3)
+})
+
+QUnit.test('listenTo(): execute fail', function (assert) {
+    var obs  = new Observer
+    var sub  = new Subject({
+        tryCatch: function () {}
+    })
+    var done = assert.async()
+
+    obs.listenTo(sub, 'abc', () => {
+        throw new Error('xx')
+    })
+
+    obs.listenTo(sub, 'abc', () => {
+        assert.ok(true)
+        done()
+    })
+
+    sub.trigger('abc')
+})
+
+QUnit.test('listenToOnce()', function (assert) {
+    var obs     = new Observer
+    var subject = new Subject
+    obs.listenToOnce(subject, {type: 'open'}, () => {
+        assert.ok(true)
+    })
+
+    subject.trigger({type: 'open'})
+    subject.trigger({type: 'open'})
     assert.expect(1)
 })
 
-QUnit.test('trigger(): struct event', function (assert) {
-    var obs:any = new Observer
-    var event   = obs._on({type: 't1', data: 123}, () => {
-        assert.ok(true)
-    })
-    assert.deepEqual(obs._memberToEvent, {
-        'type$"t1"': [event],
-        'data$123' : [event]
-    })
 
-    obs.trigger({type: 't1'})
-    obs.trigger({type: 't1', data: 123})
-    obs.trigger({data: 123})
-    obs.trigger({type: 't2'})
-    assert.expect(2)
-})
+//QUnit.test('listenTo()/stopListening(): struct event', function (assert) {
+//    var s:any = new Subscriber
+//    var o     = new Observer
+//    s.listenTo(o, {type: 'open', casefileID: 123}, () => {
+//        assert.ok(true)
+//    })
+//
+//    o.trigger({type: 'open', casefileID: 123})
+//    assert.expect(1)
+//
+//    o.trigger({type: 'open'})
+//    assert.expect(2)
+//
+//    o.trigger({casefileID: 123})
+//    assert.expect(3)
+//
+//    o.trigger({type: 'close', casefileID: 123})
+//    assert.expect(3)
+//
+//
+//    s.stopListening()
+//    assert.deepEqual(s._events, [])
+//    assert.expect(4)
+//
+//    o.trigger({type: 'open'})
+//    assert.expect(4)
+//})

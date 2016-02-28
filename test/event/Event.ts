@@ -1,6 +1,6 @@
 import Event from '../../lib/event/Event'
+import Subject from '../../lib/event/Subject'
 import Observer from '../../lib/event/Observer'
-import Subscriber from '../../lib/event/Subscriber'
 
 QUnit.module('Event')
 
@@ -16,8 +16,8 @@ QUnit.test('_id', function (assert) {
 
 
 QUnit.test('stopListening()', function (assert) {
-    var s           = new Subscriber
-    var o           = new Observer
+    var s           = new Observer
+    var o           = new Subject
     var event:Event = s.listenTo(o, 'open', () => {
         assert.ok(true)
     })

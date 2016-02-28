@@ -6,7 +6,7 @@ class Event {
     __id:number         = Event.ID_GENERATOR++
     __callback:Function
     __composition:string[]
-    __observer
+    __subject
     __matchCount:number = 0
 
     get _id() { return this.__id}
@@ -17,14 +17,14 @@ class Event {
 
     get _compositionCount() {return this.__composition.length}
 
-    constructor(callback, composition, observer) {
+    constructor(callback, composition, subject) {
         this.__callback    = callback
         this.__composition = composition
-        this.__observer    = observer
+        this.__subject     = subject
     }
 
     stopListening():void {
-        this.__observer._off(this)
+        this.__subject._off(this)
     }
 }
 

@@ -6,7 +6,8 @@ require('./case/Benchmark')
 require('./rpc/Ajax')
 
 require('./event/Event')
+require('./event/Subject')
 require('./event/Observer')
-require('./event/Subscriber')
+require('./event/trigger')
 
 
