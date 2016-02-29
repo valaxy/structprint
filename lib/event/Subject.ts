@@ -145,11 +145,11 @@ class Subject {
         //var triggerEvents:Event[] = this._pickAlwaysAppearEvents(eventsList)
         var triggerEvents:Event[] = this._pickSubSet(eventsList)
         triggerEvents.forEach(event => {
-            try {
-                event._callback.apply(this, args)
-            } catch (e) {
-                this._tryCatch(e)
-            }
+            //try {
+            event._callback.apply(this, args)
+            //} catch (e) {
+            //    this._tryCatch(e)
+            //}
         })
     }
 }
