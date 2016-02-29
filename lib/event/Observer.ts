@@ -6,6 +6,8 @@ import Event from './Event'
 // @日志:
 // - 没有监听所有事件的API
 
+type ListenData = [string|Object, Function]
+
 class Observer {
     private _events:Event[] = []
 
@@ -24,6 +26,12 @@ class Observer {
 
         this._events.push(e)
         return e
+    }
+
+    listenToMany(subject:Subject, listens:ListenData[]) {
+        return listens.map(listen => {
+            return this.listenTo(subject, listen[0], listen[1])
+        })
     }
 
     listenToOnce(subject:Subject, event:string|Object, callback:Function):Event {
