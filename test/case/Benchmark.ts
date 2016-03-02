@@ -5,12 +5,15 @@ import UseCase from "../../lib/case/UseCase"
 
 QUnit.module('Benchmark')
 
-QUnit.test('default', function (assert) {
+QUnit.test('default', assert => {
     var done     = assert.async()
     var executor = new Executor([
+        QueueExecute(1),
         Benchmark({
-            process: (timeInMS) => {
-                assert.ok(timeInMS > 0)
+            process: (durationInMS, err, useCase) => {
+                assert.ok(durationInMS > 0)
+                assert.ok(err === null)
+                assert.ok(useCase.id >= 0)
             }
         })
     ])
@@ -23,11 +26,30 @@ QUnit.test('default', function (assert) {
         }
     }
 
-    executor.execute(DoNothingCase).then(() => {
-        assert.expect(1)
-        done()
-    })
+    executor.execute(DoNothingCase).then(done)
 })
 
 
+QUnit.test('collect info when fail', assert => {
+    var done     = assert.async()
+    var executor = new Executor([
+        QueueExecute(1),
+        Benchmark({
+            process: (durationInMS, err, useCase) => {
+                assert.ok(durationInMS > 0)
+                assert.equal(err, e)
+                assert.ok(useCase.id >= 0)
+            }
+        })
+    ])
+
+    var e         = new Error()
+    var ErrorCase = class extends UseCase {
+        async execute() {
+            throw e
+        }
+    }
+
+    executor.execute(ErrorCase).then(done)
+})
 

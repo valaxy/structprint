@@ -4,7 +4,7 @@ import UseCase from "../../lib/case/UseCase"
 
 QUnit.module('QueueExecute')
 
-QUnit.test('concurrency = 1', function (assert) {
+QUnit.test('concurrency = 1', assert => {
     var done        = assert.async()
     var beginTime   = performance.now()
     var executor    = new Executor([
@@ -34,7 +34,7 @@ QUnit.test('concurrency = 1', function (assert) {
 })
 
 
-QUnit.test('concurrency = 2', function (assert) {
+QUnit.test('concurrency = 2', assert => {
     var done        = assert.async()
     var beginTime   = performance.now()
     var executor    = new Executor([
@@ -63,6 +63,29 @@ QUnit.test('concurrency = 2', function (assert) {
     })
 })
 
+
+QUnit.test('timeout', assert => {
+    var done      = assert.async()
+    var beginTime = performance.now()
+    var executor  = new Executor([
+        QueueExecuteMiddleware(1, 200)
+    ])
+
+    var TimeoutCase = class extends UseCase {
+        async execute() {
+            await new Promise((resolve) => {
+                setTimeout(resolve, 500)
+            })
+        }
+    }
+
+    executor.execute(TimeoutCase).catch((e) => {
+        var time = performance.now() - beginTime
+        assert.ok(e.message.indexOf('timeout') >= 0)
+        assert.ok(Math.abs(time - 200) < 50)
+        done()
+    })
+})
 
 
 
