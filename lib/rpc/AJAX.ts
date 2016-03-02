@@ -104,7 +104,7 @@ class AJAX extends Remote {
         EVENTS.forEach((event) => {
             this[`_${event}`] = new Promise<any>((resolve) => {
                 this._xhr.addEventListener(event.slice(2), () => {
-                    resolve(this._xhr)
+                    resolve(this)
                 })
             })
         })
