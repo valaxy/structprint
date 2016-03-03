@@ -22,9 +22,9 @@ var QueueExecute = function (concurrency?:number, timeoutInMS?:number) { // todo
             callback(e)
         }
 
-        let makeSuccess = () => {
+        let makeSuccess = (result) => {
             timeoutHandle = null
-            callback()
+            callback(null, result)
         }
 
         let makeError = (e) => {
@@ -36,8 +36,8 @@ var QueueExecute = function (concurrency?:number, timeoutInMS?:number) { // todo
             if (timeoutHandle !== null) makeTimeout()
         }, timeoutInMS)
 
-        task.useCase['execute'].apply(task.useCase, task.params).then(() => {
-            if (timeoutHandle !== null) makeSuccess()
+        task.useCase['execute'].apply(task.useCase, task.params).then((result) => {
+            if (timeoutHandle !== null) makeSuccess(result)
         }, (e) => {
             if (timeoutHandle !== null) makeError(e)
         })
@@ -48,9 +48,9 @@ var QueueExecute = function (concurrency?:number, timeoutInMS?:number) { // todo
             queue.push({
                 useCase: useCase,
                 params : params
-            }, function (err) {
+            }, function (err, result) {
                 if (err) return reject(err)
-                resolve()
+                resolve(result)
             })
         })
     }

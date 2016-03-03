@@ -9,7 +9,7 @@ class CorrectCase extends UseCase {
 QUnit.module('UseCase')
 
 
-QUnit.test('execute correct', function (assert) {
+QUnit.test('execute(): correct', assert => {
     var done = assert.async()
     var c    = new CorrectCase
     c.execute('1', '2').then((result) => {
@@ -19,7 +19,7 @@ QUnit.test('execute correct', function (assert) {
 })
 
 
-QUnit.test('execute wrong', function (assert) {
+QUnit.test('execute(): wrong', assert => {
     class WrongCase extends UseCase {
         async execute() {
             throw new Error('wrong')
@@ -34,8 +34,7 @@ QUnit.test('execute wrong', function (assert) {
     })
 })
 
-
-QUnit.test('id', function (assert) {
+QUnit.test('id', assert => {
     var c1 = new CorrectCase()
     var c2 = new CorrectCase()
     assert.equal(c1.id + 1, c2.id)

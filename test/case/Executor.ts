@@ -1,7 +1,7 @@
 import Middleware from '../../lib/case/middleware/Middleware'
 import Executor from "../../lib/case/Executor"
 import UseCase from "../../lib/case/UseCase"
-
+import QueueExecute from '../../lib/case/middleware/QueueExecute'
 
 
 class MyUseCase extends UseCase {
@@ -12,7 +12,7 @@ class MyUseCase extends UseCase {
 
 QUnit.module('Executor')
 
-QUnit.test('no middleware', function (assert) {
+QUnit.test('no middleware', assert => {
     var done     = assert.async()
     var executor = new Executor()
     executor.execute(MyUseCase).then(function () {
@@ -22,7 +22,7 @@ QUnit.test('no middleware', function (assert) {
 })
 
 
-QUnit.test('single middleware', function (assert) {
+QUnit.test('single middleware', assert => {
     var done         = assert.async()
     var myMiddleware = async function (execute, useCase, data) {
         await execute()
@@ -40,7 +40,7 @@ QUnit.test('single middleware', function (assert) {
 })
 
 
-QUnit.test('multiply middlewares: success', function (assert) {
+QUnit.test('multiply middlewares: success', assert => {
     var done        = assert.async()
     var counter     = 0
     var middleware1 = async function (execute) {
@@ -70,7 +70,7 @@ QUnit.test('multiply middlewares: success', function (assert) {
     })
 })
 
-QUnit.test('multiply middlewares: fail', function (assert) {
+QUnit.test('multiply middlewares: fail', assert => {
     var done        = assert.async()
     var counter     = 0
     var middleware1 = async function (execute) {
@@ -91,6 +91,36 @@ QUnit.test('multiply middlewares: fail', function (assert) {
     ])
     executor.execute(MyUseCase).then(null, function () {
         assert.expect(2)
+        done()
+    })
+})
+
+
+QUnit.test('execute(): single middleware get return', assert => {
+    var done     = assert.async()
+    var executor = new Executor([
+        async function () {
+            return '123123'
+        }
+    ])
+    executor.execute(MyUseCase).then((result)=> {
+        assert.equal(result, '123123')
+        done()
+    })
+})
+
+QUnit.test('execute(): middlewares get return', assert => {
+    var done     = assert.async()
+    var executor = new Executor([
+        async function (execute) {
+            return '123' + (await execute())
+        },
+        async function (execute) {
+            return 'abc' + (await execute())
+        }
+    ])
+    executor.execute(MyUseCase).then((result)=> {
+        assert.equal(result, 'abc123undefined')
         done()
     })
 })

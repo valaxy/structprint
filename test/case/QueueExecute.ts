@@ -88,4 +88,21 @@ QUnit.test('timeout', assert => {
 })
 
 
+QUnit.test('get result', assert => {
+    var done     = assert.async()
+    var executor = new Executor([
+        QueueExecuteMiddleware(1)
+    ])
+
+    var CommonCase = class extends UseCase {
+        async execute() {
+            return 123
+        }
+    }
+
+    executor.execute(CommonCase).then(result => {
+        assert.equal(result, 123)
+        done()
+    })
+})
 

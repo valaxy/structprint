@@ -50,6 +50,10 @@ QUnit.test('collect info when fail', assert => {
         }
     }
 
-    executor.execute(ErrorCase).then(done)
+    executor.execute(ErrorCase).catch(err => {
+        assert.equal(err, e)
+        assert.expect(4)
+        done()
+    })
 })
 

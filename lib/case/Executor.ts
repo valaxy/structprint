@@ -16,11 +16,11 @@ class Executor {
         this._middlewares.forEach((middleware) => {
             let oldExecute = execute
             execute        = async () => {
-                await middleware.apply(this, [].concat(oldExecute, useCase, params))
+                return await middleware.apply(this, [].concat(oldExecute, useCase, params))
             }
         })
 
-        await execute()
+        return await execute()
     }
 }
 

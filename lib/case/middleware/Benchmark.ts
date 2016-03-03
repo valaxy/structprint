@@ -12,12 +12,14 @@ var Benchmark = function (options?:BenchmarkOptions):Middleware {
     return async function (execute, useCase:UseCase, ...params) {
         var startTime = performance.now()
         try {
-            await execute()
+            var result  = await execute()
             var endTime = performance.now()
             options.process(endTime - startTime, null, useCase, params)
+            return result
         } catch (err) {
             var endTime = performance.now()
             options.process(endTime - startTime, err, useCase, params)
+            throw err
         }
     }
 }
