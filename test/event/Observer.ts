@@ -4,25 +4,49 @@ import Observer from '../../lib/event/Observer'
 
 QUnit.module('Observer')
 
-QUnit.test('listenTo()/stopListening(): struct event', assert => {
+QUnit.test('listenTo(): event is plain data', assert => {
     var obs:any = new Observer
     var sub     = new Subject
-    obs.listenTo(sub, {type: 'open'}, () => {
-        assert.ok(true)
+    obs.listenTo(sub, {type: 'open'}, ({type}) => {
+        assert.equal(type, 'open')
     })
 
+    sub.trigger('open')
     sub.trigger({type: 'open'})
     sub.trigger({type: 'open', casefileID: 123})
+    assert.expect(3)
+})
 
+QUnit.test('listenTo(): event has complex data', assert => {
+    var obs   = new Observer
+    var sub   = new Subject
+    var Model = class { }
+
+    obs.listenTo(sub, {type: 'open', id: 123}, ({type, id, model}) => {
+        assert.ok(model instanceof Model)
+        assert.equal(type, 'open')
+        assert.equal(id, 123)
+    })
+
+    sub.trigger({
+        type : 'open',
+        id   : 123,
+        model: new Model
+    })
+})
+
+QUnit.test('stopListening(): ', assert => {
+    var obs:any = new Observer
+    var sub     = new Subject
+
+    obs.listenTo(sub, 'open', () => {assert.ok(true)})
     obs.stopListening().listenTo(sub, {type: 'open', casefileID: 123}, () => {assert.ok(true)})
-    sub.trigger({type: 'open', casefileID: 123})
 
-    sub.trigger({casefileID: 123})
-    sub.trigger({type: 'open'})
+    sub.trigger({type: 'open', casefileID: 123})
 
     obs.stopListening()
     assert.deepEqual(obs._events, [])
-    assert.expect(4)
+    assert.expect(2)
 })
 
 //QUnit.test('listenTo(): execute fail', assert => {
@@ -69,32 +93,3 @@ QUnit.test('listenToMany()', assert => {
     subject.trigger('type2')
     assert.expect(2)
 })
-
-
-//QUnit.test('listenTo()/stopListening(): struct event', function (assert) {
-//    var s:any = new Subscriber
-//    var o     = new Observer
-//    s.listenTo(o, {type: 'open', casefileID: 123}, () => {
-//        assert.ok(true)
-//    })
-//
-//    o.trigger({type: 'open', casefileID: 123})
-//    assert.expect(1)
-//
-//    o.trigger({type: 'open'})
-//    assert.expect(2)
-//
-//    o.trigger({casefileID: 123})
-//    assert.expect(3)
-//
-//    o.trigger({type: 'close', casefileID: 123})
-//    assert.expect(3)
-//
-//
-//    s.stopListening()
-//    assert.deepEqual(s._events, [])
-//    assert.expect(4)
-//
-//    o.trigger({type: 'open'})
-//    assert.expect(4)
-//})

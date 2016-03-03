@@ -79,32 +79,36 @@ class Subject {
         return appearEvents
     }
 
-    _flattenEventSource(eventSource:Object) {
-        var iterate = (compositions:string[], prefix:string, eventSource:Object) => {
-            for (var key in eventSource) {
-                var value     = eventSource[key]
-                var newPrefix = `${prefix}${this.PATH_SPLITER}${key}`
-                if (typeof value == 'object') {
-                    iterate(compositions, newPrefix, value)
-                    continue
-                }
+    _flattenEvent(event:Object) {
+        var iterate = (compositions:string[], prefix:string, event:Object) => {
+            for (var key in event) {
+                var value = event[key]
+                if (value === null
+                    || value === undefined
+                    || value.constructor === Number
+                    || value.constructor === String
+                    || value.constructor === Boolean
+                    || value.constructor === Object
+                ) {
+                    var attachPrefix = `${prefix}${this.PATH_SPLITER}${key}`
+                    if (value && value.constructor == Object) {
+                        iterate(compositions, attachPrefix, value)
+                        continue
+                    }
 
-                if (typeof value == 'string') {
-                    var member = `${newPrefix}${this.PATH_SPLITER}${JSON.stringify(value)}`
-                } else {
-                    member = `${newPrefix}${this.PATH_SPLITER}${value}`
+                    var member = `${attachPrefix}${this.PATH_SPLITER}${JSON.stringify(value)}`
+                    compositions.push(member.slice(1))
                 }
-                compositions.push(member.slice(1))
             }
             return compositions
         }
 
-        return iterate([], '', eventSource)
+        return iterate([], '', event)
     }
 
     // internal use
     _on(event:Object, callback:Function):Event {
-        var composition:string[] = this._flattenEventSource(event)
+        var composition:string[] = this._flattenEvent(event)
         var e                    = new Event(callback, composition, this)
         composition.forEach(member => {
             if (member in this._memberToEvent) {
@@ -132,21 +136,21 @@ class Subject {
         return this
     }
 
-    trigger(event:string|Object, ...args) {
+    trigger(event:string|Object) {
         if (typeof event == 'string') {
             event = {type: event}
         }
 
-        var composition:string[] = this._flattenEventSource(event)
+        var composition:string[] = this._flattenEvent(event)
         var eventsList           = composition.map(member => {
             return this._memberToEvent[member] || []
         })
 
         //var triggerEvents:Event[] = this._pickAlwaysAppearEvents(eventsList)
         var triggerEvents:Event[] = this._pickSubSet(eventsList)
-        triggerEvents.forEach(event => {
+        triggerEvents.forEach(eventObject => {
             //try {
-            event._callback.apply(this, args)
+            eventObject._callback(event)
             //} catch (e) {
             //    this._tryCatch(e)
             //}

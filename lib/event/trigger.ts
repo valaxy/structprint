@@ -3,9 +3,9 @@ import Observer from "./Observer";
 
 type ListenData = [string|Object, Function]
 
-type TriggerData = any[]
+type TriggerData = string|Object
 
-const trigger = function (events:TriggerData, listens:ListenData[]) {
+const trigger = function (events:TriggerData[], listens:ListenData[]) {
     var observer = new Observer
     var subject  = new Subject
     listens.forEach((listenData) => {
@@ -14,8 +14,9 @@ const trigger = function (events:TriggerData, listens:ListenData[]) {
         observer.listenTo(subject, listenEvent, listenCallback)
     })
 
-    events.forEach(eventData => {
-        subject.trigger.apply(subject, eventData)
+    events.forEach(event => {
+        console.log(event)
+        subject.trigger(event)
     })
 }
 

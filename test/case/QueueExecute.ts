@@ -13,22 +13,22 @@ QUnit.test('concurrency = 1', assert => {
     var TimeoutCase = class extends UseCase {
         async execute() {
             await new Promise((resolve) => {
-                setTimeout(resolve, 1000)
+                setTimeout(resolve, 200)
             })
         }
     }
 
     executor.execute(TimeoutCase).then(() => {
         var time = performance.now() - beginTime
-        assert.ok(Math.abs(time - 1000) < 50)
+        assert.ok(Math.abs(time - 200) < 30)
     })
     executor.execute(TimeoutCase).then(() => {
         var time = performance.now() - beginTime
-        assert.ok(Math.abs(time - 2000) < 50)
+        assert.ok(Math.abs(time - 400) < 30)
     })
     executor.execute(TimeoutCase).then(() => {
         var time = performance.now() - beginTime
-        assert.ok(Math.abs(time - 3000) < 50)
+        assert.ok(Math.abs(time - 600) < 30)
         done()
     })
 })
@@ -43,22 +43,22 @@ QUnit.test('concurrency = 2', assert => {
     var TimeoutCase = class extends UseCase {
         async execute() {
             await new Promise((resolve) => {
-                setTimeout(resolve, 1000)
+                setTimeout(resolve, 200)
             })
         }
     }
 
     executor.execute(TimeoutCase).then(() => {
         var time = performance.now() - beginTime
-        assert.ok(Math.abs(time - 1000) < 50)
+        assert.ok(Math.abs(time - 200) < 50)
     })
     executor.execute(TimeoutCase).then(() => {
         var time = performance.now() - beginTime
-        assert.ok(Math.abs(time - 1000) < 50)
+        assert.ok(Math.abs(time - 200) < 50)
     })
     executor.execute(TimeoutCase).then(() => {
         var time = performance.now() - beginTime
-        assert.ok(Math.abs(time - 2000) < 50)
+        assert.ok(Math.abs(time - 400) < 50)
         done()
     })
 })

@@ -9,27 +9,26 @@ QUnit.test('empty', assert => {
 })
 
 QUnit.test('one event', assert => {
-    var ok = () => { assert.ok(true) }
+    var ok = ({type}) => { assert.equal(type, 'abc') }
 
     trigger([
-        ['abc']
+        'abc'
     ], [
         ['abc', ok],
         ['xyz', ok]
     ])
-    assert.expect(1)
 })
 
 
 QUnit.test('multiply events', assert => {
     trigger([
-        ['abc', 123],
-        ['abc', 123],
-        ['xyz'],
-        ['abcxyz']
+        {type: 'abc', data: 123},
+        {type: 'abc', data: 123},
+        'xyz',
+        'abcxyz'
     ], [
-        ['abc', (data) => {assert.equal(data, 123)}],
-        ['xyz', ()=> {assert.ok(true)}]
+        ['abc', (data) => {assert.deepEqual(data, {type: 'abc', data: 123})}],
+        ['xyz', ({type})=> {assert.equal(type, 'xyz')}]
     ])
 
     assert.expect(3)

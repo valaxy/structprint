@@ -82,24 +82,39 @@ QUnit.test('_pickAlwaysAppearEvents(): none', function (assert) {
 })
 
 
-QUnit.test('_getObjectComposition()', function (assert) {
+QUnit.test('_flattenEvent()', function (assert) {
     var obs          = new Subject
     obs.PATH_SPLITER = '$'
-    assert.deepEqual(obs._flattenEventSource({
+
+    // plain value
+    assert.deepEqual(obs._flattenEvent({
             a: '123',
             b: 123,
             c: true,
             d: {
                 a: '1'
-            }
-        }),
-        [
+            },
+            e: null,
+            f: undefined
+        }), [
             'a$"123"',
             'b$123',
             'c$true',
-            'd$a$"1"'
+            'd$a$"1"',
+            'e$null',
+            'f$undefined'
         ]
     )
+
+    // plain value + complex value
+    assert.deepEqual(obs._flattenEvent({
+        a: '123',
+        b: new Function,
+        c: new RegExp("aa"),
+        d: [1, 2, 3]
+    }), [
+        'a$"123"'
+    ])
 })
 
 
@@ -172,18 +187,18 @@ QUnit.test('trigger(): string event', assert => {
 })
 
 QUnit.test('trigger(): struct event', function (assert) {
-    var obs:any = new Subject
-    var event   = obs._on({type: 't1', data: 123}, () => {
+    var sub:any = new Subject
+    var event   = sub._on({type: 't1', data: 123}, () => {
         assert.ok(true)
     })
-    assert.deepEqual(obs._memberToEvent, {
+    assert.deepEqual(sub._memberToEvent, {
         'type$"t1"': [event],
         'data$123' : [event]
     })
 
-    obs.trigger({type: 't1'})
-    obs.trigger({type: 't1', data: 123})
-    obs.trigger({data: 123})
-    obs.trigger({type: 't2'})
+    sub.trigger({type: 't1'})
+    sub.trigger({type: 't1', data: 123})
+    sub.trigger({data: 123})
+    sub.trigger({type: 't2'})
     assert.expect(2)
 })
