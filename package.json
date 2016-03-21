@@ -1,6 +1,6 @@
 {
   "name": "structprint",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "The missing architecture of WEB APP in frontend domain, **connect** all the other frameworks",
   "main": "index.js",
   "directories": {

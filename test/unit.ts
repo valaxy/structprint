@@ -9,5 +9,6 @@ require('./event/Event')
 require('./event/Subject')
 require('./event/Observer')
 require('./event/trigger')
+require('./event/createSourceable')
 
 

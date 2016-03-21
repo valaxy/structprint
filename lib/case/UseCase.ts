@@ -1,14 +1,9 @@
-"use strict"
+var idCounter:number = 0
 
 class UseCase {
-    static ID_COUNTER:number = 0
-    private _id
+    private _id = idCounter++
 
-    get id() {return this._id}
-
-    constructor() {
-        this._id = UseCase.ID_COUNTER++
-    }
+    get id():number {return this._id}
 
     //async execute() {
     //    throw new Error('execute() should override and implement')
