@@ -11,7 +11,7 @@ export default function createSourceable(execute:Execute) {
                 sourceID: sourceID++,
 
                 execute(UseCase, ...params) {
-                    execute(UseCase, ...params, this.prototype.sourceID)
+                    execute(UseCase, ...params, this.constructor.prototype.sourceID)
                 }
             })
         }
