@@ -15,7 +15,6 @@ const trigger = function (events:TriggerData[], listens:ListenData[]) {
     })
 
     events.forEach(event => {
-        console.log(event)
         subject.trigger(event)
     })
 }
