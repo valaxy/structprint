@@ -1,2 +1,3 @@
 - https://addyosmani.com/largescalejavascript/
 - [关于如何设计一个基于事件驱动架构的思考](http://www.cnblogs.com/netfocus/archive/2013/03/26/2982152.html)
+- [构建单页Web应用](https://github.com/xufei/blog/issues/5)
