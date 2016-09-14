@@ -1,4 +1,4 @@
-interface Execute {
+export interface Execute {
     (UseCase, ...params):any
 }
 

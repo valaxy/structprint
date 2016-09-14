@@ -4,12 +4,12 @@
   "description": "The missing architecture of WEB APP in frontend domain, **connect** all the other frameworks",
   "main": "index.js",
   "scripts": {
-    "postinstall": "tsc"
+    "postinstall": "cd build && typings install && tsc"
   },
   "license": "MIT",
   "devDependencies": {
     "body-parser": "^1.14.2",
-    "cjs": "github:valaxy/cjs",
+    "cjs": "github:valaxy/cjs#e3fb03abf7ed5e58adf0e54dfec01bf4bf65bd2e",
     "express": "^4.13.3",
     "fs-extra": "^0.26.4",
     "qunitjs": "^1.22.0",

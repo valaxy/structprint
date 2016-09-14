@@ -6,7 +6,7 @@ import Event from './Event'
 // @日志:
 // - 没有监听所有事件的API
 
-type ListenData = [string|Object, Function]
+export type ListenData = [string|Object, Function]
 
 class Observer {
     private _events:Event[] = []

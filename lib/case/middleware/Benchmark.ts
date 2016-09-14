@@ -1,7 +1,7 @@
 import UseCase from "../UseCase";
 import Middleware from "./Middleware";
 
-interface BenchmarkOptions {
+export interface BenchmarkOptions {
     process?: (timeInMS:number, useCase:UseCase, ...params) => void
 }
 

@@ -23,8 +23,8 @@ var QueueExecute = function (concurrency?:number, timeoutInMS?:number) { // todo
         }
 
         let makeSuccess = (result) => {
-            timeoutHandle = null
-            callback(null, result)
+            timeoutHandle = null;
+            (callback as any)(null, result) // todo, 这里的queue.push的callback类型有问题
         }
 
         let makeError = (e) => {
@@ -44,8 +44,9 @@ var QueueExecute = function (concurrency?:number, timeoutInMS?:number) { // todo
     }, concurrency)
 
     return function (execute, useCase:UseCase, ...params) {
-        return new Promise((resolve, reject)=> {
-            queue.push({
+        return new Promise((resolve, reject) => {
+            // todo, 这里的queue.push的callback类型有问题
+            (queue as any).push({
                 useCase: useCase,
                 params : params
             }, function (err, result) {
