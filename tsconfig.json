@@ -3,12 +3,10 @@
         "module":                 "commonjs",
         "target":                 "es6",
         "sourceMap":              true,
-        "outDir":                 "dest",
-        "declaration":            true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "outDir":                 "dest"
     },
     "exclude":         [
-        "node_modules",
-        "backup"
+        "node_modules"
     ]
 }
